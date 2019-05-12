@@ -10,17 +10,16 @@ script:
   - docker run -it -e CI=true nakul/complex-clienttesting npm test -- --coverage
 
 after_success:
-  - docker system prune -f
-  - docker build -t nakul/complex-client:latest ./client
+  - docker build -t nakul/complex-clientapp:latest ./client
   - docker build -t nakul/complex-nginx:latest ./nginx
   - docker build -t nakul/complex-server:latest ./server
   - docker build -t nakul/complex-worker:latest ./worker
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker tag nakul/complex-client $DOCKER_ID/complex-client
+  - docker tag nakul/complex-clientapp $DOCKER_ID/complex-clientapp
   - docker tag nakul/complex-nginx $DOCKER_ID/complex-nginx
   - docker tag nakul/complex-server $DOCKER_ID/complex-server
   - docker tag nakul/complex-worker $DOCKER_ID/complex-worker
-  - docker push $DOCKER_ID/complex-client
+  - docker push $DOCKER_ID/complex-clientapp
   - docker push $DOCKER_ID/complex-nginx
   - docker push $DOCKER_ID/complex-server
   - docker push $DOCKER_ID/complex-worker
