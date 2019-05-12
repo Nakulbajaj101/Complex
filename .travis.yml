@@ -1,0 +1,21 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t nakul/complex-client-test:latest -f ./client/Dockerfile.dev ./client
+
+scripts:
+  - docker run -it -e CI=true nakul/complex-client-test npm test -- --coverage
+
+after_success:
+  - docker build -t nakul/complex-client ./client
+  - docker build -t nakul/complex-nginx ./nginx
+  - docker build -t nakul/complex-server ./server
+  - docker build -t nakul/complex-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push nakul/complex-client
+  - docker push nakul/complex-nginx
+  - docker push nakul/complex-server
+  - docker push nakul/complex-worker
