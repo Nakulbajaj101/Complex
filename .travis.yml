@@ -1,25 +1,34 @@
 sudo: required
-
 services:
-  - docker
-
+- docker
 before_install:
-  - docker build -t nakul/complex-clienttesting:latest -f ./client/Dockerfile.dev ./client
-
+- docker build -t nakul/complex-clienttesting:latest -f ./client/Dockerfile.dev ./client
 script:
-  - docker run -it -e CI=true nakul/complex-clienttesting npm test -- --coverage
-
+- docker run -it -e CI=true nakul/complex-clienttesting npm test -- --coverage
 after_success:
-  - docker build -t nakul/complex-clientapp:latest ./client
-  - docker build -t nakul/complex-nginx:latest ./nginx
-  - docker build -t nakul/complex-server:latest ./server
-  - docker build -t nakul/complex-worker:latest ./worker
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker tag nakul/complex-clientapp $DOCKER_ID/complex-clientapp
-  - docker tag nakul/complex-nginx $DOCKER_ID/complex-nginx
-  - docker tag nakul/complex-server $DOCKER_ID/complex-server
-  - docker tag nakul/complex-worker $DOCKER_ID/complex-worker
-  - docker push $DOCKER_ID/complex-clientapp
-  - docker push $DOCKER_ID/complex-nginx
-  - docker push $DOCKER_ID/complex-server
-  - docker push $DOCKER_ID/complex-worker
+- docker build -t nakul/complex-clientapp:latest ./client
+- docker build -t nakul/complex-nginx:latest ./nginx
+- docker build -t nakul/complex-server:latest ./server
+- docker build -t nakul/complex-worker:latest ./worker
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+- docker tag nakul/complex-clientapp $DOCKER_ID/complex-clientapp
+- docker tag nakul/complex-nginx $DOCKER_ID/complex-nginx
+- docker tag nakul/complex-server $DOCKER_ID/complex-server
+- docker tag nakul/complex-worker $DOCKER_ID/complex-worker
+- docker push $DOCKER_ID/complex-clientapp
+- docker push $DOCKER_ID/complex-nginx
+- docker push $DOCKER_ID/complex-server
+- docker push $DOCKER_ID/complex-worker
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: AKIAR634M7HUVMBC2DZY
+  secret_access_key:
+    secure: B0PZGfe31ebj2741yxJE5si63KwwSTK9VmaE3rzhXBKESpbPg+ZIv0zufNwFZLeIJLEQHfNuaMg3o5I9e/UXMMx8C6xmNmT0Og/ATW0ItlBrSLRWL+2ujjNejADHobyor2ZnTFH/b9a285B/RrJDhg88zo7rWdZHPwLvV9riMfHXUkGCLQX0kOtp3ggwvajIkAA+up9vcj7lS9ICE7mGcY5puMt+oKVtmdh5vpEBYSKxlTCZwsSTbTSxpDizSdk1YWp06hDVU0Yaqbo31mh9EfrsNAsH4LWH/kHKwnm5JnVj3v19VJyb+cZ7oniXKG7gKZA/N+HSrJ6zvJPsgS0z9c/nwtmk9G/cvO4GpUhanB0RRtmcEHbG2ugQI973sK1wR1QgIaKsFSiyg8CleKPqrWNM8tbkbXr4rrLo7J+LNVS1Rip4TcUoq7KL1kUfIZIUVx3XMFMddgeLZMVI2mw9j4nx/1pt3jyewDo741/SNdJMoGj6vqwnFbR6Wy8FYlglVha9rgyuPSDNkQBwRuTqDwF0wniuOz14DAGCIQo39v++zClyUFXz9POloF3bb11ReUikYKJh2gBTBcQTbt1ykW/UF6lcXyYfjNjN+OaGV5f45vgfHgtNQXH4Pf8DXM9Q60hfMiAb3mFT2KFi/m5nKb34LRwz0GE5qFhKFtnxlA0=
+  region: us-east-2
+  app: nakul-multi-docker
+  env: NakulMultiDocker-env
+  bucket_name: elasticbeanstalk-us-east-2-135015496169
+  bucket_path: nakul-multi-docker
+  on:
+    repo: Nakulbajaj101/Complex
+    branch: master
