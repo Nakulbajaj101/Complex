@@ -4,7 +4,7 @@
     {
       "name": "clientapp",
       "image": "bajajn2/complex-clientapp",
-      "hostname": "clientapp",
+      "hostname": "client",
       "essential": false,
       "memory": 128
     },
