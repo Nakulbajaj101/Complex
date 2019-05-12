@@ -7,10 +7,10 @@ services:
   - docker
 
 before_install:
-  - docker build -t nakul/complex-client-test:latest -f ./client/Dockerfile.dev ./client
+  - docker build -t nakul/complex-clientTesting:latest -f ./client/Dockerfile.dev ./client
 
 scripts:
-  - docker run -it -e CI=true nakul/complex-client-test npm test -- --coverage
+  - docker run -it -e CI=true nakul/complex-clientTesting npm test -- --coverage
 
 after_success:
   - docker build -t nakul/complex-client ./client
