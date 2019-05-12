@@ -9,7 +9,7 @@ services:
 before_install:
   - docker build -t nakul/complex-clienttesting:latest -f ./client/Dockerfile.dev ./client
 
-scripts:
+script:
   - docker run -it -e CI=true nakul/complex-clienttesting npm test -- --coverage
 
 after_success:
